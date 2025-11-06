@@ -85,7 +85,7 @@ class SkullStripping(pymia_fltr.Filter):
         img_arr = sitk.GetArrayFromImage(image)
         img_arr = img_arr * mask_arr
         image = sitk.GetImageFromArray(img_arr)
-        image.CopyInformation(image_original)
+        image.CopyInformation(img_org)
         
         return image
 
