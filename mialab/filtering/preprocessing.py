@@ -29,9 +29,19 @@ class ImageNormalization(pymia_fltr.Filter):
         img_arr = sitk.GetArrayFromImage(image).astype(np.float32)
 
         # todo: normalize the image using numpy
-        
-        img_norm = (img_arr - np.min(img_arr)) / (np.max(img_arr) - np.min(img_arr))
+        # ## Min-Max method
+        # img_norm = (img_arr - np.min(img_arr)) / (np.max(img_arr) - np.min(img_arr))
+        #
+        # img_out = sitk.GetImageFromArray(img_norm)
+        # img_out.CopyInformation(image)
 
+        ## Z-score normalization
+        mean = np.mean(img_arr)
+        std = np.std(img_arr) + 1e-8
+
+        img_norm = (img_arr - mean) / std
+
+        # Convert back to SimpleITK
         img_out = sitk.GetImageFromArray(img_norm)
         img_out.CopyInformation(image)
 
@@ -79,7 +89,6 @@ class SkullStripping(pymia_fltr.Filter):
         mask = params.img_mask  # the brain mask
 
         # todo: remove the skull from the image by using the brain mask
-        
         mask_arr = sitk.GetArrayFromImage(mask)
         img_org = image
         img_arr = sitk.GetArrayFromImage(image)
